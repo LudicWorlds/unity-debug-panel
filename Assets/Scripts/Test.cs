@@ -3,16 +3,21 @@ using LudicWorlds;
 
 public class Test : MonoBehaviour
 {
-    void Start()
+    void Awake()
     {
-        Debug.Log("-> Test::Start()");
+        Debug.Log("-> Test::Awake()");
     }
-    
+
     void OnEnable()
     {
         Debug.Log("-> Test::OnEnable()");
     }
-    
+
+    void Start()
+    {
+        Debug.Log("-> Test::Start()");
+    }
+       
     void OnDisable()
     {
         Debug.Log("-> Test::OnDisable()");

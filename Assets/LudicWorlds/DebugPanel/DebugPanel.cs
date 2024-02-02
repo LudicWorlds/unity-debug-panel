@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 
 namespace LudicWorlds
@@ -15,7 +16,9 @@ namespace LudicWorlds
         private float   _elapsedTime;
         private uint    _fpsSamples;
         private float   _sumFps;
-        
+
+        private Queue<string> _queuedMessages;
+
         private const int MAX_LINES = 23;
 
         private Transform _cameraTransform;
@@ -27,7 +30,9 @@ namespace LudicWorlds
             _elapsedTime = 0;
             _fpsSamples = 0;
             _fpsText.text = "0";
-            Application.logMessageReceived += HandleLog;
+            _queuedMessages = new Queue<string>();
+
+            Application.logMessageReceived += OnMessageReceived;
         }
 
 
@@ -39,7 +44,7 @@ namespace LudicWorlds
         
         void OnDestroy()
         {
-            Application.logMessageReceived -= HandleLog;
+            Application.logMessageReceived -= OnMessageReceived;
         }
 
         private void AcquireObjects()
@@ -52,10 +57,9 @@ namespace LudicWorlds
             _statusText = ui.Find("StatusText").GetComponent<Text>();
         }
         
-        void HandleLog(string message, string stackTrace, LogType type)
+        void OnMessageReceived(string message, string stackTrace, LogType type)
         {
-            _debugText.text += (message + "\n");
-            TrimText();
+            _queuedMessages.Enqueue(message);
         }
         
         // Update is called once per frame
@@ -80,6 +84,17 @@ namespace LudicWorlds
             _dirToPlayer = (this.transform.position - _cameraTransform.position).normalized;
             _dirToPlayer.y = 0; // This ensures rotation only around the Y-axis
             this.transform.rotation = Quaternion.LookRotation( _dirToPlayer );
+
+            //Display any queued Debug Log messages...
+            if (_queuedMessages.Count > 0)
+            {
+                while (_queuedMessages.Count > 0)
+                {
+                    _debugText.text += (_queuedMessages.Dequeue() + "\n");
+                }
+
+                TrimText();
+            }  
         }
 
         public static void Clear()
