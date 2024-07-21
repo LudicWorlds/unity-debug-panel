@@ -7,3 +7,7 @@
 2. Navigate to "Assets" > "Import Package" > "Custom Package" in the Unity Editor.
 3. Select the downloaded 'DebugPanel.unitypackage' file and click "Open".
 4. In the Import dialog, check the assets you want to import and click "Import".
+
+
+## Disclaimer
+This project is provided "as is" without warranty of any kind. Use at your own risk. The author is not responsible for any damage or data loss resulting from the use of this package. Compatibility and performance may vary depending on your system configuration.
